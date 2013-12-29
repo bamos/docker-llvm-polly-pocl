@@ -12,7 +12,7 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt
 RUN apt-get update
 
 # Load dotfiles configuration.
-RUN apt-get install -y git zsh vim-nox
+RUN apt-get install -y git zsh vim
 RUN git clone git://github.com/bamos/dotfiles.git .dotfiles
 RUN cd .dotfiles; \
   git submodule init; \
