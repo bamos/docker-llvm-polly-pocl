@@ -2,6 +2,7 @@
 
 # Start from an Ubuntu image.
 FROM ubuntu:12.04
+RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
 RUN apt-get update
 MAINTAINER Brandon Amos, bdamos@vt.edu
 
