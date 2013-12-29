@@ -8,12 +8,36 @@ Build LLVM 3.3, Polly, and PoCL 0.8 in an Ubuntu Docker image.
 + Dependencies
 
 # Using.
-Use docker to build the image from the Dockerfile.
+
+## Building the image.
+Use docker to build the image using the Dockerfile, 2 ways.
+
+### 1. Manually clone this repository:
 
 ```
+$ git clone git@github.com:bamos/docker-llvm-polly-pocl.git
+$ cd docker-llvm-polly-pocl
 $ docker build -t llvm-polly-pocl .
+```
+
+### 2. Or, use docker to automatically clone this repository:
+
+```
+$ docker build -t llvm-polly-pocl github.com/bamos/docker-llvm-polly-pocl
+```
+
+## Running the image.
+
+### View the built image.
+
+```
 $ docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
 llvm-polly-pocl     latest              4fad53ed40b8        3 minutes ago       662 MB
+```
+
+### Run the image.
+
+```
 $ docker run -i -t llvm-polly-pocl /bin/zsh
 ```
