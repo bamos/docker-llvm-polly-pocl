@@ -1,15 +1,12 @@
 # Dockerfile for LLVM 3.3, Polly, and PoCL 0.8.
 
 # Start from an Ubuntu image.
-FROM ubuntu
+FROM ubuntu:12.04
+RUN apt-get update
 MAINTAINER Brandon Amos, bdamos@vt.edu
 
 # Configuration options.
 ENV NUM_THREADS 4
-
-# Ensure the sources are updates.
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-RUN apt-get update
 
 # Load dotfiles configuration.
 RUN apt-get install -y git zsh vim
@@ -55,8 +52,8 @@ ENV CXX g++-4.6
 # Download and install Cloog (Polly dependency)
 ENV CLOOG_SRC /usr/local/cloog_src
 ENV CLOOG_INSTALL /usr/local/cloog_install
-RUN $LLVM_SRC/tools/polly/utils/checkout_cloog.sh $CLOOG_SRC; \
-  cd $CLOOG_SRC; \
+RUN $LLVM_SRC/tools/polly/utils/checkout_cloog.sh $CLOOG_SRC
+RUN cd $CLOOG_SRC; \
   ./configure --prefix=$CLOOG_INSTALL; \
   make; \
   make install;

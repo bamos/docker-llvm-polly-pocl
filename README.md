@@ -1,5 +1,5 @@
 # About.
-Build LLVM 3.3, Polly, and PoCL 0.8 in an Ubuntu Docker image.
+Build LLVM 3.3, Polly, and PoCL 0.8 in an Ubuntu 12.04 Docker image.
 
 # This downloads and installs.
 + [bamos/dotfiles](https://github.com/bamos/dotfiles)
@@ -20,7 +20,7 @@ $ cd docker-llvm-polly-pocl
 $ docker build -t llvm-polly-pocl .
 ```
 
-### 2. Or, use docker to automatically clone this repository:
+### 2. Or, use docker to automatically pull the Dockerfile from here:
 
 ```
 $ docker build -t llvm-polly-pocl github.com/bamos/docker-llvm-polly-pocl
