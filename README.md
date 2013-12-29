@@ -30,7 +30,9 @@ LLVM_BUILD /usr/local/llvm_build
 
 # Building the image.
 Use docker to build the image using the Dockerfile, 2 ways.
+```
 
+```
 ## 1. Manually clone this repository:
 
 ```Bash
@@ -51,6 +53,8 @@ docker build -t llvm-polly-pocl github.com/bamos/docker-llvm-polly-pocl
 
 ```
 docker images
+
+---
 
 REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
 [...]
@@ -76,6 +80,8 @@ alias polly_opt="opt -load /usr/local/lib/LLVMPolly.so"
 clang -S -emit-llvm matmul.c -o matmul.s
 polly_opt -S -mem2reg -loop-simplify -polly-indvars matmul.s > matmul.preopt.ll
 polly_opt -basicaa -polly-cloog -analyze -q matmul.preopt.ll
+
+---
 
 Pass::print not implemented for pass: 'Basic Alias Analysis (stateless AA impl)'!
 init_array():
