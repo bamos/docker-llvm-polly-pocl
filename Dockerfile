@@ -52,10 +52,9 @@ ENV CXX g++-4.6
 
 # Download and install Cloog (Polly dependency)
 ENV CLOOG_SRC /usr/local/cloog_src
-ENV CLOOG_INSTALL /usr/local/cloog_install
 RUN $LLVM_SRC/tools/polly/utils/checkout_cloog.sh $CLOOG_SRC
 RUN cd $CLOOG_SRC; \
-  ./configure --prefix=$CLOOG_INSTALL; \
+  ./configure; \
   make; \
   make install;
 
@@ -63,8 +62,7 @@ RUN cd $CLOOG_SRC; \
 ENV LLVM_BUILD /usr/local/llvm_build
 RUN mkdir $LLVM_BUILD; \
   cd $LLVM_BUILD; \
-  $LLVM_SRC/configure --enable-shared \
-    --with-cloog=$CLOOG_INSTALL --with-isl=$CLOOG_INSTALL; \
+  $LLVM_SRC/configure --enable-shared; \
   make -j$NUM_THREADS REQUIRES_RTTI=1; \
   make install
 
