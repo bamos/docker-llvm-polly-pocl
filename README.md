@@ -45,8 +45,6 @@ docker build -t llvm-polly-pocl .
 docker build -t llvm-polly-pocl github.com/bamos/docker-llvm-polly-pocl
 ```
 
-# Running the image.
-
 ## View the built image.
 
 ```
@@ -60,10 +58,24 @@ llvm-polly-pocl     latest              4fad53ed40b8        3 minutes ago       
 [...]
 ```
 
-## Run the image.
+## Run the image to start the ssh daemon.
+
+This will start an ssh server on port 22 in the container
+forwarded to 127.0.0.1:2222 in the host.
+This will also forward the `$HOME` directory from the host
+to `host_home` in the container, and other directories
+can be synchronized similarly.
 
 ```
-docker run -i -t llvm-polly-pocl /bin/zsh
+docker run -v $HOME:/host_home -p 127.0.0.1:2222:22 -t llvm-polly-pocl
+```
+
+## ssh into the image.
+
+The default password is `llvmpollypocl`. Change it!
+
+```
+ssh -p 2222 root@127.0.0.1
 ```
 
 # Verifying Polly installation.
