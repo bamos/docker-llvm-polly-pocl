@@ -30,9 +30,7 @@ LLVM_BUILD /usr/local/llvm_build
 
 # Building the image.
 Use docker to build the image using the Dockerfile, 2 ways.
-```
 
-```
 ## 1. Manually clone this repository:
 
 ```Bash
@@ -83,7 +81,6 @@ polly_opt -basicaa -polly-cloog -analyze -q matmul.preopt.ll
 
 ---
 
-Pass::print not implemented for pass: 'Basic Alias Analysis (stateless AA impl)'!
 init_array():
 for (c2=0;c2<=1535;c2++) {
   for (c4=0;c4<=1535;c4++) {
