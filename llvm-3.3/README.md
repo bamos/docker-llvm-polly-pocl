@@ -28,22 +28,27 @@ CLOOG_SRC /usr/local/cloog_src
 LLVM_BUILD /usr/local/llvm_build
 ```
 
-# Building the image.
-Use docker to build the image using the Dockerfile, 2 ways.
+# SSH keys.
+This configures an SSH server on the machine for development,
+and the SSH keys need to be configured.
 
-## 1. Manually clone this repository:
+If you have a Github account with the public keys you want to use,
+configure `https://github.com/<user>.keys` in the Dockerfile
+to your username before running:
+`wget https://github.com/<user>.keys -O /root/.ssh/authorized_keys`
+
+Alternatively, you can use a password-based login by
+setting a password for the root used:
+`echo 'root:llvmpollypocl' | chpasswd`.
+
+# Building the image.
 
 ```Bash
 git clone git@github.com:bamos/docker-llvm-polly-pocl.git
-cd docker-llvm-polly-pocl
-docker build -t llvm-polly-pocl .
+cd docker-llvm-polly-pocl/llvm-3.3
+docker build -t llvm3.3-polly-pocl .
 ```
 
-## 2. Or, use docker to automatically pull the Dockerfile from here:
-
-```
-docker build -t llvm-polly-pocl github.com/bamos/docker-llvm-polly-pocl
-```
 
 ## View the built image.
 
@@ -54,7 +59,7 @@ docker images
 
 REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
 [...]
-llvm-polly-pocl     latest              4fad53ed40b8        3 minutes ago       662 MB
+llvm3.3-polly-pocl     latest              4fad53ed40b8        3 minutes ago       662 MB
 [...]
 ```
 
@@ -67,12 +72,10 @@ to `host_home` in the container, and other directories
 can be synchronized similarly.
 
 ```
-docker run -v $HOME:/host_home -p 127.0.0.1:2222:22 -t llvm-polly-pocl
+docker run -v $HOME:/host_home -p 127.0.0.1:2222:22 -t llvm3.3-polly-pocl
 ```
 
 ## ssh into the image.
-
-The default password is `llvmpollypocl`. Change it!
 
 ```
 ssh -p 2222 root@127.0.0.1

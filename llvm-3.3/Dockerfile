@@ -22,20 +22,6 @@ ENV POCL_REMOTE http://pocl.sourceforge.net/downloads/pocl-0.8.tar.gz
 ENV CC gcc-4.6
 ENV CXX g++-4.6
 
-# Load dotfiles configuration for global and root users.
-RUN apt-get install -y git zsh vim; \
-  git clone git://github.com/bamos/dotfiles.git .dotfiles; \
-  cd .dotfiles; \
-  git submodule init; \
-  git submodule update; \
-  echo n | ./bootstrap.sh \
-  HOME=/root; \
-  cp /.dotfiles /root/.dotfiles -r; \
-  cd /root/.dotfiles; \
-  echo n | ./bootstrap.sh; \
-  echo /bin/zsh | chsh; \
-  echo /bin/zsh | chsh root
-
 # Download Clang, LLVM, Polly, and PoCL source files.
 RUN apt-get install -y wget tar; \
   wget -nv $CFE_REMOTE -O /tmp/cfe.tgz; \
@@ -58,7 +44,8 @@ RUN apt-get install -y gcc-4.6 g++-4.6 man make \
   build-essential freeglut3-dev libglew-dev
 
 # Download and install Cloog (Polly dependency)
-RUN $LLVM_SRC/tools/polly/utils/checkout_cloog.sh $CLOOG_SRC; \
+RUN apt-get install -y git; \
+  $LLVM_SRC/tools/polly/utils/checkout_cloog.sh $CLOOG_SRC; \
   cd $CLOOG_SRC; \
   ./configure; \
   make; \
@@ -77,11 +64,26 @@ RUN cd $POCL; \
   make -j$NUM_THREADS; \
   make install
 
-# Install and start an ssh service with credentials root:llvmpollypocl.
+
+# Load dotfiles configuration for global and root users.
+RUN apt-get install -y zsh vim; \
+  git clone git://github.com/bamos/dotfiles.git .dotfiles; \
+  cd .dotfiles; \
+  git submodule init; \
+  git submodule update; \
+  echo n | ./bootstrap.sh \
+  echo /bin/zsh | chsh; \
+  su root -c 'cp /.dotfiles ~/.dotfiles -r; \
+    cd ~/.dotfiles; \
+    echo n | ./bootstrap.sh; \
+    echo /bin/zsh | chsh root'
+
+# Install and start an ssh service.
 # https://github.com/dhrp/docker-sshd/blob/master/Dockerfile
 RUN apt-get install -y openssh-server; \
   mkdir /var/run/sshd; \
-  echo 'root:llvmpollypocl' | chpasswd
+  mkdir /root/.ssh; \
+  wget https://github.com/bamos.keys -O /root/.ssh/authorized_keys
 
 EXPOSE 22
 CMD /usr/sbin/sshd -D
