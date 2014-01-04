@@ -18,7 +18,7 @@ ENV CC gcc-4.6
 ENV CXX g++-4.6
 
 # Download Clang, LLVM, Polly, and PoCL source files.
-RUN apt-get install -y git;
+RUN apt-get install -y git; \
   git clone http://llvm.org/git/llvm.git $LLVM_SRC; \
   git clone http://llvm.org/git/polly.git $LLVM_SRC/tools/polly; \
   git clone http://llvm.org/git/clang.git $LLVM_SRC/tools/clang
