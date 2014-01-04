@@ -2,8 +2,9 @@
 
 # Start from an Ubuntu image.
 FROM ubuntu:12.04
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-RUN apt-get update
+RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > \
+    /etc/apt/sources.list; \
+  apt-get update
 MAINTAINER Brandon Amos <bdamos@vt.edu>
 
 # Configuration options.
@@ -21,7 +22,7 @@ ENV CXX g++-4.6
 RUN apt-get install -y git; \
   git clone http://llvm.org/git/llvm.git $LLVM_SRC; \
   git clone http://llvm.org/git/polly.git $LLVM_SRC/tools/polly; \
-  git clone http://llvm.org/git/clang.git $LLVM_SRC/tools/clang
+  git clone http://llvm.org/git/clang.git $LLVM_SRC/tools/clang; \
 
 # Install dependencies for Clang, LLVM, Polly, and PoCL.
 RUN apt-get install -y $CC $CXX man make \
