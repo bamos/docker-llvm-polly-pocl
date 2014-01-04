@@ -1,5 +1,5 @@
 # About.
-Build LLVM 3.3, Polly, and PoCL 0.8 in an Ubuntu 12.04 Docker image.
+Build LLVM 3.4, Polly, and PoCL 0.9 in an Ubuntu 12.04 Docker image.
 
 # Automatic Downloads/Installs
 ## [bamos/dotfiles](https://github.com/bamos/dotfiles)
@@ -16,10 +16,6 @@ The following environment variables will be set.
 
 ```
 NUM_THREADS 4
-CFE_REMOTE http://llvm.org/releases/3.3/cfe-3.3.src.tar.gz
-LLVM_REMOTE http://llvm.org/releases/3.3/llvm-3.3.src.tar.gz
-POLLY_REMOTE http://llvm.org/releases/3.3/polly-3.3.src.tar.gz
-POCL_REMOTE http://pocl.sourceforge.net/downloads/pocl-0.8.tar.gz
 LLVM_SRC /usr/local/llvm
 POCL /usr/local/pocl
 CC gcc-4.6
@@ -28,21 +24,26 @@ CLOOG_SRC /usr/local/cloog_src
 LLVM_BUILD /usr/local/llvm_build
 ```
 
-# Building the image.
-Use docker to build the image using the Dockerfile, 2 ways.
+# SSH keys.
+This configures an SSH server on the machine for development,
+and the SSH keys need to be configured.
 
-## 1. Manually clone this repository:
+If you have a Github account with the public keys you want to use,
+configure `https://github.com/<user>.keys` in the Dockerfile
+to your username before running:
+`wget https://github.com/<user>.keys -O /root/.ssh/authorized_keys`
+
+Alternatively, you can use a password-based login by
+setting a password for the root used:
+`echo 'root:llvmpollypocl' | chpasswd`.
+
+# Building the image.
+Use docker to build the image.
 
 ```Bash
 git clone git@github.com:bamos/docker-llvm-polly-pocl.git
-cd docker-llvm-polly-pocl
-docker build -t llvm-polly-pocl .
-```
-
-## 2. Or, use docker to automatically pull the Dockerfile from here:
-
-```
-docker build -t llvm-polly-pocl github.com/bamos/docker-llvm-polly-pocl
+cd docker-llvm-polly-pocl/llvm-3.4
+docker build -t llvm3.4-polly-pocl .
 ```
 
 ## View the built image.
@@ -54,7 +55,7 @@ docker images
 
 REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
 [...]
-llvm-polly-pocl     latest              4fad53ed40b8        3 minutes ago       662 MB
+llvm3.4-polly-pocl     latest              4fad53ed40b8        3 minutes ago       662 MB
 [...]
 ```
 
@@ -71,8 +72,6 @@ docker run -v $HOME:/host_home -p 127.0.0.1:2222:22 -t llvm-polly-pocl
 ```
 
 ## ssh into the image.
-
-The default password is `llvmpollypocl`. Change it!
 
 ```
 ssh -p 2222 root@127.0.0.1
