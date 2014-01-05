@@ -8,45 +8,50 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > \
 MAINTAINER Brandon Amos <bdamos@vt.edu>
 
 # Configuration options.
-ENV NUM_THREADS 4
-
 ENV LLVM_SRC /usr/local/llvm
 ENV POCL /usr/local/pocl
 ENV CLOOG_SRC /usr/local/cloog_src
-ENV LLVM_BUILD /usr/local/llvm_build
+ENV LLVM_BUILD /usr/local/llvm-build
 
 ENV CC gcc-4.6
 ENV CXX g++-4.6
 
-# Download Clang, LLVM, Polly, and PoCL source files.
-RUN apt-get install -y git; \
-  git clone http://llvm.org/git/llvm.git $LLVM_SRC; \
-  git clone http://llvm.org/git/polly.git $LLVM_SRC/tools/polly; \
-  git clone http://llvm.org/git/clang.git $LLVM_SRC/tools/clang; \
-
-# Install dependencies for Clang, LLVM, Polly, and PoCL.
-RUN apt-get install -y $CC $CXX man make \
-  libgmp3-dev autoconf libtool pkg-config libhwloc-dev \
-  build-essential freeglut3-dev libglew-dev
-
-# Download and install Cloog (Polly dependency)
-RUN $LLVM_SRC/tools/polly/utils/checkout_cloog.sh $CLOOG_SRC; \
+# 1. Download Clang, LLVM, Polly, and PoCL source files.
+# 2. Install dependencies for Clang, LLVM, Polly, and PoCL.
+# 3. Download and install Cloog (Polly dependency)
+RUN apt-get install -y git $CC $CXX man make \
+    libgmp3-dev autoconf libtool pkg-config libhwloc-dev \
+    build-essential freeglut3-dev libglew-dev; \
+  git clone -b release_34 http://llvm.org/git/llvm.git $LLVM_SRC; \
+  git clone -b release_34 http://llvm.org/git/polly.git $LLVM_SRC/tools/polly; \
+  git clone -b release_34 http://llvm.org/git/clang.git $LLVM_SRC/tools/clang; \
+  $LLVM_SRC/tools/polly/utils/checkout_cloog.sh $CLOOG_SRC; \
   cd $CLOOG_SRC; \
   ./configure; \
   make; \
-  make install;
-
-# Install Clang, LLVM, and Polly.
-RUN mkdir $LLVM_BUILD; \
+  make install; \
+  cd ..; \
+  rm -rf $CLOOG_SRC; \
+  mkdir $LLVM_BUILD; \
   cd $LLVM_BUILD; \
-  $LLVM_SRC/configure --enable-shared; \
-  make -j$NUM_THREADS REQUIRES_RTTI=1; \
-  make install
+  $LLVM_SRC/configure \
+    --disable-assertions \
+    --disable-bindings \
+    --disable-docs \
+    --enable-optimized \
+    --enable-targets=host-only \
+    --enable-shared; \
+  make -j$(grep processor /proc/cpuinfo | wc -l) REQUIRES_RTTI=1; \
+  make install; \
+  cd ..; \
+  rm -rf $LLVM_BUILD
 
 # Install PoCL
-RUN cd $POCL; \
+RUN git clone -b release_0_9 https://github.com/pocl/pocl.git $POCL; \
+  cd $POCL; \
+  ./autogen.sh; \
   ./configure --disable-icd; \
-  make -j$NUM_THREADS; \
+  make -j$(grep processor /proc/cpuinfo | wc -l); \
   make install
 
 # Load dotfiles configuration for global and root users.
