@@ -46,7 +46,7 @@ setting a password for the root used:
 ```Bash
 git clone git@github.com:bamos/docker-llvm-polly-pocl.git
 cd docker-llvm-polly-pocl/llvm-3.3
-docker build -t llvm3.3-polly-pocl .
+docker build -rm=true -t llvm3.3-polly-pocl .
 ```
 
 

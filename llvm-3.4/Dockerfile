@@ -42,9 +42,7 @@ RUN apt-get install -y git $CC $CXX man make \
     --enable-targets=host-only \
     --enable-shared; \
   make -j$(grep processor /proc/cpuinfo | wc -l) REQUIRES_RTTI=1; \
-  make install; \
-  cd ..; \
-  rm -rf $LLVM_BUILD
+  make install
 
 # Install PoCL
 RUN git clone -b release_0_9 https://github.com/pocl/pocl.git $POCL; \
